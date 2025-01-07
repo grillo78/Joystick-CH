@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "grillo78.joystick_ch.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "joystick_ch.refmap.json",
+  "mixins": [
+    "ProvideThrustProcedureMixin",
+    "ShipMovementProcedureMixin",
+    "PitchsideProcedureMixin",
+    "LookControlMixin"
+  ],
+  "client":[
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
