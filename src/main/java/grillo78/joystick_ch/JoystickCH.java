@@ -29,11 +29,11 @@ public class JoystickCH {
 
     public JoystickCH(FMLJavaModLoadingContext context) {
         context.getModEventBus().addListener(this::commonSetup);
-        MinecraftForge.EVENT_BUS.addListener(this::inputTick);
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachCapabilities);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             MinecraftForge.EVENT_BUS.addListener(this::preRenderEntity);
             MinecraftForge.EVENT_BUS.addListener(this::postRenderEntity);
+            MinecraftForge.EVENT_BUS.addListener(this::inputTick);
         });
     }
 
@@ -41,18 +41,28 @@ public class JoystickCH {
         PacketHandler.init();
     }
 
+    @OnlyIn(Dist.CLIENT)
     private void inputTick(MovementInputUpdateEvent event) {
         double thrust = -GLFW.glfwGetJoystickAxes(0).get(3);
         double yaw = -GLFW.glfwGetJoystickAxes(0).get(0);
         double pitch = -GLFW.glfwGetJoystickAxes(0).get(1);
         double roll = -GLFW.glfwGetJoystickAxes(0).get(2);
+        if (Minecraft.getInstance().screen == null)
+            setJoystickData(thrust, yaw, pitch, roll);
+        else
+            setJoystickData(0, 0, 0, 0);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void setJoystickData(double thrust, double yaw, double pitch, double roll) {
+
         double deadzone = 0.1;
-        PacketHandler.INSTANCE.sendToServer(new SendJoystickInput( thrust < -deadzone || thrust > deadzone ? thrust : 0, yaw < -deadzone || yaw > deadzone ? yaw : 0, pitch < -deadzone || pitch > deadzone ? pitch : 0, roll < -deadzone || roll > deadzone ? roll : 0));
+        PacketHandler.INSTANCE.sendToServer(new SendJoystickInput(thrust < -deadzone || thrust > deadzone ? thrust : 0, yaw < -deadzone || yaw > deadzone ? yaw : 0, pitch < -deadzone || pitch > deadzone ? pitch : 0, roll < -deadzone || roll > deadzone ? roll : 0));
         Minecraft.getInstance().player.getCapability(JoystickControllerProvider.CONTROLLER).ifPresent(joystickController -> {
-            joystickController.setThrust( thrust < -deadzone || thrust > deadzone ? thrust : 0);
+            joystickController.setThrust(thrust < -deadzone || thrust > deadzone ? thrust : 0);
             joystickController.setYaw(yaw < -deadzone || yaw > deadzone ? yaw : 0);
-            joystickController.setPitch( pitch < -deadzone || pitch > deadzone ? pitch : 0);
-            joystickController.setRoll( roll < -deadzone || roll > deadzone ? roll : 0);
+            joystickController.setPitch(pitch < -deadzone || pitch > deadzone ? pitch : 0);
+            joystickController.setRoll(roll < -deadzone || roll > deadzone ? roll : 0);
         });
     }
 

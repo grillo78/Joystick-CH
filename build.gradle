@@ -142,6 +142,10 @@ dependencies {
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:0.0.7.3")
+    implementation fg.deobf("maven.modrinth:starlance:1.1.9")
+    implementation fg.deobf("maven.modrinth:valkyrien-skies:1.20.1-forge-2.3.0-beta.5")
+    implementation fg.deobf("maven.modrinth:cloth-config:11.1.136+forge")
+    implementation fg.deobf("maven.modrinth:kotlin-for-forge:4.11.0")
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
