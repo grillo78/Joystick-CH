@@ -1,16 +1,21 @@
 package grillo78.joystick_ch;
 
-import grillo78.joystick_ch.capability.JoystickController;
 import grillo78.joystick_ch.capability.JoystickControllerProvider;
 import grillo78.joystick_ch.network.PacketHandler;
 import grillo78.joystick_ch.network.messages.SendJoystickInput;
+import net.lointain.cosmos.client.model.ModelTNT1;
+import net.lointain.cosmos.entity.RocketSeatEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -18,34 +23,51 @@ import org.lwjgl.glfw.GLFW;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(JoystickCH.MOD_ID)
-public class JoystickCH
-{
+public class JoystickCH {
     // Define mod id in a common place for everything to reference
     public static final String MOD_ID = "joystick_ch";
 
-    public JoystickCH(FMLJavaModLoadingContext context)
-    {
+    public JoystickCH(FMLJavaModLoadingContext context) {
         context.getModEventBus().addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.addListener(this::inputTick);
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachCapabilities);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            MinecraftForge.EVENT_BUS.addListener(this::preRenderEntity);
+            MinecraftForge.EVENT_BUS.addListener(this::postRenderEntity);
+        });
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
         PacketHandler.init();
     }
 
-    private void inputTick(MovementInputUpdateEvent event){
+    private void inputTick(MovementInputUpdateEvent event) {
         double thrust = -GLFW.glfwGetJoystickAxes(0).get(3);
         double yaw = -GLFW.glfwGetJoystickAxes(0).get(0);
         double pitch = -GLFW.glfwGetJoystickAxes(0).get(1);
         double roll = -GLFW.glfwGetJoystickAxes(0).get(2);
-        PacketHandler.INSTANCE.sendToServer(new SendJoystickInput(thrust, yaw, pitch, roll));
+        double deadzone = 0.1;
+        PacketHandler.INSTANCE.sendToServer(new SendJoystickInput( thrust < -deadzone || thrust > deadzone ? thrust : 0, yaw < -deadzone || yaw > deadzone ? yaw : 0, pitch < -deadzone || pitch > deadzone ? pitch : 0, roll < -deadzone || roll > deadzone ? roll : 0));
         Minecraft.getInstance().player.getCapability(JoystickControllerProvider.CONTROLLER).ifPresent(joystickController -> {
-            joystickController.setThrust(thrust);
-            joystickController.setYaw(yaw);
-            joystickController.setPitch(pitch);
-            joystickController.setRoll(roll);
+            joystickController.setThrust( thrust < -deadzone || thrust > deadzone ? thrust : 0);
+            joystickController.setYaw(yaw < -deadzone || yaw > deadzone ? yaw : 0);
+            joystickController.setPitch( pitch < -deadzone || pitch > deadzone ? pitch : 0);
+            joystickController.setRoll( roll < -deadzone || roll > deadzone ? roll : 0);
         });
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void preRenderEntity(RenderLivingEvent.Pre event) {
+        if (event.getRenderer().getModel() instanceof ModelTNT1) {
+            event.getPoseStack().pushPose();
+//            event.getPoseStack().mulPose(new Quaternionf().rotationX(event.getEntity().getXRot()));
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void postRenderEntity(RenderLivingEvent.Post event) {
+        if (event.getEntity() instanceof RocketSeatEntity)
+            event.getPoseStack().popPose();
     }
 
     private void attachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
