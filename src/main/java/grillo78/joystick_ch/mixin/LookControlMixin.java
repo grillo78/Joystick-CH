@@ -17,7 +17,7 @@ public class LookControlMixin {
 
     @Shadow @Final protected Mob mob;
 
-    @Inject(method = "tick", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void onExecute(CallbackInfo ci){
         if(mob instanceof RocketSeatEntity)
             ci.cancel();

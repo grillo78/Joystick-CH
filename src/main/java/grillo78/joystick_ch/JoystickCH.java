@@ -1,6 +1,7 @@
 package grillo78.joystick_ch;
 
 import grillo78.joystick_ch.capability.JoystickControllerProvider;
+import grillo78.joystick_ch.capability.ShipRotationsProvider;
 import grillo78.joystick_ch.network.PacketHandler;
 import grillo78.joystick_ch.network.messages.SendJoystickInput;
 import net.lointain.cosmos.client.model.ModelTNT1;
@@ -19,6 +20,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -44,9 +46,9 @@ public class JoystickCH {
     @OnlyIn(Dist.CLIENT)
     private void inputTick(MovementInputUpdateEvent event) {
         double thrust = -GLFW.glfwGetJoystickAxes(0).get(3);
-        double yaw = -GLFW.glfwGetJoystickAxes(0).get(0);
+        double roll = -GLFW.glfwGetJoystickAxes(0).get(0);
         double pitch = -GLFW.glfwGetJoystickAxes(0).get(1);
-        double roll = -GLFW.glfwGetJoystickAxes(0).get(2);
+        double yaw = -GLFW.glfwGetJoystickAxes(0).get(2);
         if (Minecraft.getInstance().screen == null)
             setJoystickData(thrust, yaw, pitch, roll);
         else
@@ -68,21 +70,27 @@ public class JoystickCH {
 
     @OnlyIn(Dist.CLIENT)
     private void preRenderEntity(RenderLivingEvent.Pre event) {
-        if (event.getRenderer().getModel() instanceof ModelTNT1) {
-            event.getPoseStack().pushPose();
-//            event.getPoseStack().mulPose(new Quaternionf().rotationX(event.getEntity().getXRot()));
+        if (event.getEntity() instanceof RocketSeatEntity) {
+            event.setCanceled(true);
+//            event.getPoseStack().pushPose();
+//            event.getPoseStack().mulPose(new Quaternionf().rotationX((float) Math.toRadians(90)));
+//            event.getPoseStack().scale(10,10,10);
+
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     private void postRenderEntity(RenderLivingEvent.Post event) {
-        if (event.getEntity() instanceof RocketSeatEntity)
-            event.getPoseStack().popPose();
+//        if (event.getEntity() instanceof RocketSeatEntity)
+//            event.getPoseStack().popPose();
     }
 
     private void attachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
             event.addCapability(new ResourceLocation(MOD_ID, "joystick_controller"), new JoystickControllerProvider());
+        }
+        if (event.getObject() instanceof RocketSeatEntity) {
+            event.addCapability(new ResourceLocation(MOD_ID, "ship_rotations"), new ShipRotationsProvider());
         }
     }
 }

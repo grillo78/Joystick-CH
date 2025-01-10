@@ -1,7 +1,7 @@
 package grillo78.joystick_ch.network;
 
 import grillo78.joystick_ch.JoystickCH;
-import grillo78.joystick_ch.network.messages.SendJoystickInput;
+import grillo78.joystick_ch.network.messages.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -21,6 +21,7 @@ public class PacketHandler {
                 PROTOCOL_VERSION::equals,
                 PROTOCOL_VERSION::equals);
         register(SendJoystickInput.class, new SendJoystickInput());
+        register(SyncShipRotationsCap.class, new SyncShipRotationsCap());
     }
 
     private static <T extends IMessage> void register(Class<T> clazz, IMessage<T> message) {

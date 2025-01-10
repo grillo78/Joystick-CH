@@ -10,6 +10,7 @@
     "LookControlMixin"
   ],
   "client":[
+    "ShipProcedureMixin"
   ],
   "injectors": {
     "defaultRequire": 1
