@@ -4,7 +4,6 @@ import grillo78.joystick_ch.capability.JoystickControllerProvider;
 import grillo78.joystick_ch.capability.ShipRotationsProvider;
 import grillo78.joystick_ch.network.PacketHandler;
 import grillo78.joystick_ch.network.messages.SendJoystickInput;
-import net.lointain.cosmos.client.model.ModelTNT1;
 import net.lointain.cosmos.entity.RocketSeatEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -20,7 +20,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -70,19 +69,22 @@ public class JoystickCH {
 
     @OnlyIn(Dist.CLIENT)
     private void preRenderEntity(RenderLivingEvent.Pre event) {
-        if (event.getEntity() instanceof RocketSeatEntity) {
-            event.setCanceled(true);
-//            event.getPoseStack().pushPose();
-//            event.getPoseStack().mulPose(new Quaternionf().rotationX((float) Math.toRadians(90)));
-//            event.getPoseStack().scale(10,10,10);
+        if (event.getEntity() instanceof Player) {
+            event.getPoseStack().pushPose();
+            if (event.getEntity().getVehicle() != null)
+                event.getEntity().getVehicle().getCapability(ShipRotationsProvider.CAPABILITY).ifPresent(shipRotations -> {
+                    event.getPoseStack().translate(0, 2 * event.getEntity().getVehicle().getPassengersRidingOffset(), 0);
+                    event.getPoseStack().mulPose(shipRotations.getRotations());
+                    event.getPoseStack().translate(0, 2 * -event.getEntity().getVehicle().getPassengersRidingOffset(), 0);
+                });
 
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     private void postRenderEntity(RenderLivingEvent.Post event) {
-//        if (event.getEntity() instanceof RocketSeatEntity)
-//            event.getPoseStack().popPose();
+        if (event.getEntity() instanceof Player)
+            event.getPoseStack().popPose();
     }
 
     private void attachCapabilities(final AttachCapabilitiesEvent<Entity> event) {

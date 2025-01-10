@@ -17,7 +17,7 @@ public class ProvideThrustProcedureMixin {
     private static void onExecute(LevelAccessor world, Entity entity, boolean dimension_check, CallbackInfo ci){
         ci.cancel();
         entity.getCapability(JoystickControllerProvider.CONTROLLER).ifPresent(joystickController -> {
-            MovementUtil.applyThrust(entity, joystickController);
+            MovementUtil.applyThrust(entity, joystickController, dimension_check);
         });
     }
 }
