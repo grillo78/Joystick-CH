@@ -1,4 +1,4 @@
-package grillo78.joystick_ch.capability;
+package grillo78.better_ships.capability;
 
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;

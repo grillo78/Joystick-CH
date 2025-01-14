@@ -1,9 +1,6 @@
-package grillo78.joystick_ch.mixin;
+package grillo78.better_ships.mixin;
 
-import grillo78.joystick_ch.capability.JoystickControllerProvider;
-import grillo78.joystick_ch.util.MovementUtil;
 import net.lointain.cosmos.procedures.PitchsideProcedure;
-import net.lointain.cosmos.procedures.ShipMovementProcedure;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

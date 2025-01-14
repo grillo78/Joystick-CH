@@ -132,6 +132,7 @@ repositories {
     //     dir 'libs'
     // }
     maven { url "https://api.modrinth.com/maven" }
+    maven { url "https://cursemaven.com" }
 }
 
 dependencies {
@@ -141,11 +142,16 @@ dependencies {
     // If the group id is "net.minecraft" and the artifact id is one of ["client", "server", "joined"],
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    runtimeOnly fg.deobf("curse.maven:create-328085:4835191")
+    runtimeOnly fg.deobf("curse.maven:create-clockwork-807792:5580456")
+//    runtimeOnly fg.deobf("curse.maven:iris-flywheel-compat-659897:5603569")
+    implementation fg.deobf("curse.maven:oculus-581495:6020952")
+    implementation fg.deobf("curse.maven:embeddium-908741:5308079")
     implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:0.0.7.3")
-    implementation fg.deobf("maven.modrinth:starlance:1.1.9")
-    implementation fg.deobf("maven.modrinth:valkyrien-skies:1.20.1-forge-2.3.0-beta.5")
-    implementation fg.deobf("maven.modrinth:cloth-config:11.1.136+forge")
-    implementation fg.deobf("maven.modrinth:kotlin-for-forge:4.11.0")
+    runtimeOnly fg.deobf("maven.modrinth:starlance:1.1.9")
+    runtimeOnly fg.deobf("maven.modrinth:valkyrien-skies:1.20.1-forge-2.3.0-beta.5")
+    runtimeOnly fg.deobf("maven.modrinth:cloth-config:11.1.136+forge")
+    runtimeOnly fg.deobf("maven.modrinth:kotlin-for-forge:4.11.0")
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

@@ -1,10 +1,11 @@
-package grillo78.joystick_ch.network.messages;
+package grillo78.better_ships.network.messages;
 
-import grillo78.joystick_ch.capability.ShipRotationsProvider;
-import grillo78.joystick_ch.network.IMessage;
+import grillo78.better_ships.capability.ShipRotationsProvider;
+import grillo78.better_ships.network.IMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
+import org.joml.Quaternionf;
 
 import java.util.function.Supplier;
 
@@ -43,7 +44,7 @@ public class SyncShipRotationsCap implements IMessage<SyncShipRotationsCap> {
         supplier.get().enqueueWork(() -> {
             if (Minecraft.getInstance().level.getEntity(message.entityId) != null)
                 Minecraft.getInstance().level.getEntity(message.entityId).getCapability(ShipRotationsProvider.CAPABILITY).ifPresent(shipRotations -> {
-                    shipRotations.getRotations().set(message.x, message.y, message.z, message.w);
+                    shipRotations.setRotations(new Quaternionf(message.x, message.y, message.z, message.w));
                 });
         });
         supplier.get().setPacketHandled(true);

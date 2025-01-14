@@ -1,7 +1,7 @@
-package grillo78.joystick_ch.network;
+package grillo78.better_ships.network;
 
-import grillo78.joystick_ch.JoystickCH;
-import grillo78.joystick_ch.network.messages.*;
+import grillo78.better_ships.BetterShips;
+import grillo78.better_ships.network.messages.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -17,11 +17,12 @@ public class PacketHandler {
      */
     public static void init() {
         // Create the Network channel
-        INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(JoystickCH.MOD_ID, "network"),() -> PROTOCOL_VERSION,
+        INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(BetterShips.MOD_ID, "network"),() -> PROTOCOL_VERSION,
                 PROTOCOL_VERSION::equals,
                 PROTOCOL_VERSION::equals);
         register(SendJoystickInput.class, new SendJoystickInput());
         register(SyncShipRotationsCap.class, new SyncShipRotationsCap());
+        register(ToggleSpaceHyperspeed.class, new ToggleSpaceHyperspeed());
     }
 
     private static <T extends IMessage> void register(Class<T> clazz, IMessage<T> message) {

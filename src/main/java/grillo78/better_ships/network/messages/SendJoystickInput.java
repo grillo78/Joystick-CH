@@ -1,8 +1,7 @@
-package grillo78.joystick_ch.network.messages;
+package grillo78.better_ships.network.messages;
 
-import grillo78.joystick_ch.capability.JoystickControllerProvider;
-import grillo78.joystick_ch.network.IMessage;
-import net.lointain.cosmos.network.CosmosModVariables;
+import grillo78.better_ships.capability.JoystickControllerProvider;
+import grillo78.better_ships.network.IMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 

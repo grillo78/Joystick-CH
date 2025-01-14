@@ -1,8 +1,6 @@
-package grillo78.joystick_ch.mixin;
+package grillo78.better_ships.mixin;
 
 import net.lointain.cosmos.entity.RocketSeatEntity;
-import net.lointain.cosmos.procedures.PitchsideProcedure;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.control.LookControl;
 import org.spongepowered.asm.mixin.Final;

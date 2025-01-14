@@ -1,9 +1,8 @@
-package grillo78.joystick_ch.mixin;
+package grillo78.better_ships.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import grillo78.joystick_ch.util.RenderUtil;
-import net.lointain.cosmos.init.CosmosModBlocks;
+import grillo78.better_ships.util.RenderUtil;
 import net.lointain.cosmos.procedures.ShipProcedure;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -48,6 +47,7 @@ public abstract class ShipProcedureMixin {
     @OnlyIn(Dist.CLIENT)
     @Inject(method = "renderBlock", at = @At("HEAD"), cancellable = true, remap = false)
     private static void onRenderModel(BlockState blockState, double x, double y, double z, float yaw, float pitch, float roll, float scale, boolean glowing, CallbackInfo ci) {
+        provider.getPoseStack().pushPose();
         BlockPos blockPos = BlockPos.containing(x, y, z);
         ResourceLocation oldBlockLoc = ForgeRegistries.BLOCKS.getKey(blockState.getBlock());
         blockState = ForgeRegistries.BLOCKS.getDelegate(new ResourceLocation(oldBlockLoc.getNamespace(), oldBlockLoc.getPath().replace("_", "").replace("upright", ""))).get().get().defaultBlockState();

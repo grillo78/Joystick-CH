@@ -1,4 +1,4 @@
-package grillo78.joystick_ch.network;
+package grillo78.better_ships.network;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;

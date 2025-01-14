@@ -1,0 +1,14 @@
+{
+  "gui.yaw": "Set Yaw",
+  "gui.pitch": "Set Pitch",
+  "gui.roll": "Set Roll",
+  "gui.thrust": "Set Thrust",
+  "gui.yaw_inverted": "Yaw is inverted",
+  "gui.pitch_inverted": "Pitch is inverted",
+  "gui.roll_inverted": "Roll is inverted",
+  "gui.thrust_inverted": "Thrust is inverted",
+  "gui.yaw_not_inverted": "Yaw is not inverted",
+  "gui.pitch_not_inverted": "Pitch is not inverted",
+  "gui.roll_not_inverted": "Roll is not inverted",
+  "gui.thrust_not_inverted": "Thrust is not inverted"
+}

@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "grillo78.joystick_ch.mixin",
+  "package": "grillo78.better_ships.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "joystick_ch.refmap.json",
   "mixins": [
@@ -10,8 +10,8 @@
     "LookControlMixin"
   ],
   "client":[
-    "ShipProcedureMixin",
-    "LevelRendererMixin"
+    "client.ShipProcedureMixin",
+    "client.GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

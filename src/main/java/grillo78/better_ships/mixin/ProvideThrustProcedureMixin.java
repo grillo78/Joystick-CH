@@ -1,7 +1,7 @@
-package grillo78.joystick_ch.mixin;
+package grillo78.better_ships.mixin;
 
-import grillo78.joystick_ch.capability.JoystickControllerProvider;
-import grillo78.joystick_ch.util.MovementUtil;
+import grillo78.better_ships.capability.JoystickControllerProvider;
+import grillo78.better_ships.util.MovementUtil;
 import net.lointain.cosmos.procedures.ProvideThrustProcedure;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.LevelAccessor;
