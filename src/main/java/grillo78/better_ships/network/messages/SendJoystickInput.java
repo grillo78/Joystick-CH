@@ -2,7 +2,9 @@ package grillo78.better_ships.network.messages;
 
 import grillo78.better_ships.capability.JoystickControllerProvider;
 import grillo78.better_ships.network.IMessage;
+import grillo78.better_ships.network.PacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -41,11 +43,13 @@ public class SendJoystickInput implements IMessage<SendJoystickInput> {
     public void handle(SendJoystickInput message, Supplier<NetworkEvent.Context> supplier) {
         supplier.get().enqueueWork(() -> {
             supplier.get().getSender().getCapability(JoystickControllerProvider.CONTROLLER).ifPresent(joystickController -> {
-
                 joystickController.setThrust(message.thrust);
                 joystickController.setYaw(message.yaw);
                 joystickController.setPitch(message.pitch);
                 joystickController.setRoll(message.roll);
+                supplier.get().getSender().serverLevel().players().forEach(serverPlayer -> {
+                    PacketHandler.INSTANCE.sendTo(new SyncJoystickInputToClient(message.thrust, message.yaw, message.pitch, message.roll, joystickController.isHyperSpeed(), supplier.get().getSender().getId()), supplier.get().getSender().connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+                });
             });
         });
         supplier.get().setPacketHandled(true);

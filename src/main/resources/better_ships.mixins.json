@@ -2,16 +2,17 @@
   "required": true,
   "package": "grillo78.better_ships.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "joystick_ch.refmap.json",
+  "refmap": "better_ships.refmap.json",
   "mixins": [
+    "LookControlMixin",
+    "PitchsideProcedureMixin",
     "ProvideThrustProcedureMixin",
     "ShipMovementProcedureMixin",
-    "PitchsideProcedureMixin",
-    "LookControlMixin"
+    "MinecraftServerMixin"
   ],
-  "client":[
-    "client.ShipProcedureMixin",
-    "client.GameRendererMixin"
+  "client": [
+    "client.GameRendererMixin",
+    "client.ShipProcedureMixin"
   ],
   "injectors": {
     "defaultRequire": 1

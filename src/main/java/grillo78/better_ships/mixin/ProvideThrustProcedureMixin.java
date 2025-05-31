@@ -1,6 +1,7 @@
 package grillo78.better_ships.mixin;
 
 import grillo78.better_ships.capability.JoystickControllerProvider;
+import grillo78.better_ships.capability.ShipRotationsProvider;
 import grillo78.better_ships.util.MovementUtil;
 import net.lointain.cosmos.procedures.ProvideThrustProcedure;
 import net.minecraft.world.entity.Entity;
@@ -17,7 +18,9 @@ public class ProvideThrustProcedureMixin {
     private static void onExecute(LevelAccessor world, Entity entity, boolean dimension_check, CallbackInfo ci){
         ci.cancel();
         entity.getCapability(JoystickControllerProvider.CONTROLLER).ifPresent(joystickController -> {
-            MovementUtil.applyThrust(entity, joystickController, dimension_check);
+            entity.getVehicle().getCapability(ShipRotationsProvider.CAPABILITY).ifPresent(shipRotations -> {
+                MovementUtil.applyThrust(entity, joystickController, shipRotations, dimension_check);
+            });
         });
     }
 }

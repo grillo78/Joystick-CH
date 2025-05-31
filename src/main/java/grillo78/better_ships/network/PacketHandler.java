@@ -21,8 +21,10 @@ public class PacketHandler {
                 PROTOCOL_VERSION::equals,
                 PROTOCOL_VERSION::equals);
         register(SendJoystickInput.class, new SendJoystickInput());
+        register(SyncJoystickInputToClient.class, new SyncJoystickInputToClient());
         register(SyncShipRotationsCap.class, new SyncShipRotationsCap());
         register(ToggleSpaceHyperspeed.class, new ToggleSpaceHyperspeed());
+        register(ToggleAutoland.class, new ToggleAutoland());
     }
 
     private static <T extends IMessage> void register(Class<T> clazz, IMessage<T> message) {

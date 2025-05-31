@@ -26,38 +26,37 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ShipProcedure.class)
 public abstract class ShipProcedureMixin {
 
-    @Shadow private static RenderLevelStageEvent provider;
+    @Shadow(remap = false) private static RenderLevelStageEvent provider;
 
-    @Shadow
+    @Shadow(remap = false)
     protected static void renderBlockModel(BlockState blockState, BlockPos blockPos, PoseStack poseStack, int packedLight) {
     }
 
-    @Shadow
+    @Shadow(remap = false)
     protected static void renderBlockEntity(BlockState blockState, BlockPos blockPos, PoseStack poseStack, int packedLight) {
     }
 
-    private static Entity CURRENT_ENTITY;
-
     @OnlyIn(Dist.CLIENT)
-    @Inject(method = "execute(Lnet/minecraftforge/eventbus/api/Event;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/world/entity/Entity;D)V", at = @At("HEAD"), cancellable = true, remap = false)
-    private static void onExecute(Event event, LevelAccessor world, Entity entity, double partialTick, CallbackInfo ci){
-        CURRENT_ENTITY = entity.getVehicle();
+    @Inject(method = "renderModels", at = @At("HEAD"), cancellable = true, remap = false)
+    private static void onExecute(RenderLevelStageEvent event, CallbackInfo ci){
+//        CURRENT_ENTITY = entity.getVehicle();
+        ci.cancel();
     }
 
-    @OnlyIn(Dist.CLIENT)
-    @Inject(method = "renderBlock", at = @At("HEAD"), cancellable = true, remap = false)
-    private static void onRenderModel(BlockState blockState, double x, double y, double z, float yaw, float pitch, float roll, float scale, boolean glowing, CallbackInfo ci) {
-        provider.getPoseStack().pushPose();
-        BlockPos blockPos = BlockPos.containing(x, y, z);
-        ResourceLocation oldBlockLoc = ForgeRegistries.BLOCKS.getKey(blockState.getBlock());
-        blockState = ForgeRegistries.BLOCKS.getDelegate(new ResourceLocation(oldBlockLoc.getNamespace(), oldBlockLoc.getPath().replace("_", "").replace("upright", ""))).get().get().defaultBlockState();
-        Vec3 pos = provider.getCamera().getPosition();
-        int packedLight = glowing ? 15728880 : LevelRenderer.getLightColor(Minecraft.getInstance().level, blockPos);
-        RenderUtil.applyShipRotations(blockState, x, y, z, yaw, pitch, roll, scale, glowing, provider, CURRENT_ENTITY, pos, ci);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        renderBlockModel(blockState, blockPos, provider.getPoseStack(), packedLight);
-        renderBlockEntity(blockState, blockPos, provider.getPoseStack(), packedLight);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        provider.getPoseStack().popPose();
-    }
+//    @OnlyIn(Dist.CLIENT)
+//    @Inject(method = "renderBlock", at = @At("HEAD"), cancellable = true, remap = false)
+//    private static void onRenderModel(BlockState blockState, double x, double y, double z, float yaw, float pitch, float roll, float scale, boolean glowing, CallbackInfo ci) {
+//        provider.getPoseStack().pushPose();
+//        BlockPos blockPos = BlockPos.containing(x, y, z);
+//        ResourceLocation oldBlockLoc = ForgeRegistries.BLOCKS.getKey(blockState.getBlock());
+//        blockState = ForgeRegistries.BLOCKS.getDelegate(new ResourceLocation(oldBlockLoc.getNamespace(), oldBlockLoc.getPath().replace("_", "").replace("upright", ""))).get().get().defaultBlockState();
+//        Vec3 pos = provider.getCamera().getPosition();
+//        int packedLight = glowing ? 15728880 : LevelRenderer.getLightColor(Minecraft.getInstance().level, blockPos);
+//        RenderUtil.applyShipRotations(blockState, x, y, z, yaw, pitch, roll, scale, glowing, provider, CURRENT_ENTITY, pos, ci);
+//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//        renderBlockModel(blockState, blockPos, provider.getPoseStack(), packedLight);
+//        renderBlockEntity(blockState, blockPos, provider.getPoseStack(), packedLight);
+//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//        provider.getPoseStack().popPose();
+//    }
 }

@@ -1,6 +1,7 @@
 package grillo78.better_ships.capability;
 
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -15,8 +16,8 @@ public class JoystickControllerProvider implements ICapabilityProvider {
     });
     private final LazyOptional<JoystickController> PlayerDataOptional;
 
-    public JoystickControllerProvider() {
-        this.PlayerDataOptional = LazyOptional.of(() -> new JoystickController());
+    public JoystickControllerProvider(Entity player) {
+        this.PlayerDataOptional = LazyOptional.of(() -> new JoystickController(player));
     }
 
     @Nonnull

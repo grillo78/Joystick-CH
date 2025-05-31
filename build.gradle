@@ -55,7 +55,7 @@ minecraft {
     // However, it must be at "META-INF/accesstransformer.cfg" in the final mod jar to be loaded by Forge.
     // This default location is a best practice to automatically put the file in the right place in the final jar.
     // See https://docs.minecraftforge.net/en/latest/advanced/accesstransformers/ for more information.
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -128,11 +128,19 @@ repositories {
 
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
-    // flatDir {
-    //     dir 'libs'
-    // }
+     flatDir {
+         dir 'libs'
+     }
+    mavenCentral()
     maven { url "https://api.modrinth.com/maven" }
     maven { url "https://cursemaven.com" }
+    maven {
+        name = "Valkyrien Skies Internal"
+        url = "https://maven.valkyrienskies.org"
+        content {
+            excludeGroup("org.spongepowered")
+        }
+    }
 }
 
 dependencies {
@@ -142,16 +150,22 @@ dependencies {
     // If the group id is "net.minecraft" and the artifact id is one of ["client", "server", "joined"],
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    runtimeOnly fg.deobf("curse.maven:create-328085:4835191")
-    runtimeOnly fg.deobf("curse.maven:create-clockwork-807792:5580456")
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+//    runtimeOnly fg.deobf("curse.maven:create-328085:4835191")
+//    implementation fg.deobf("curse.maven:create-clockwork-807792:5580456")
 //    runtimeOnly fg.deobf("curse.maven:iris-flywheel-compat-659897:5603569")
     implementation fg.deobf("curse.maven:oculus-581495:6020952")
     implementation fg.deobf("curse.maven:embeddium-908741:5308079")
     implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:0.0.7.3")
-    runtimeOnly fg.deobf("maven.modrinth:starlance:1.1.9")
-    runtimeOnly fg.deobf("maven.modrinth:valkyrien-skies:1.20.1-forge-2.3.0-beta.5")
-    runtimeOnly fg.deobf("maven.modrinth:cloth-config:11.1.136+forge")
-    runtimeOnly fg.deobf("maven.modrinth:kotlin-for-forge:4.11.0")
+//    implementation fg.deobf("maven.modrinth:starlance:1.1.9")
+//    implementation fg.deobf("maven.modrinth:cloth-config:11.1.136+forge")
+//    implementation fg.deobf("maven.modrinth:kotlin-for-forge:4.11.0")
+//    implementation         ("org.valkyrienskies.core:api:${vs_core_version}")
+//    implementation         ("org.valkyrienskies.core:impl:${vs_core_version}")
+//    implementation         ("org.valkyrienskies.core:api-game:${vs_core_version}")
+//    implementation         ("org.valkyrienskies.core:util:${vs_core_version}")
+//    implementation fg.deobf("org.valkyrienskies:valkyrienskies-120-forge:2.3.0-beta.5+bcda04a482")
+//    implementation fg.deobf("blank:dynamic_horizons:0.1.0-1.20.1-all")
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
@@ -214,15 +228,25 @@ tasks.named('jar', Jar).configure {
 // Example configuration to allow publishing using the maven-publish plugin
 publishing {
     publications {
-        register('mavenJava', MavenPublication) {
+        mavenJava(MavenPublication) {
             artifact jar
+            artifactId = mod_id
         }
     }
     repositories {
         maven {
-            url "file://${project.projectDir}/mcmodsrepo"
+            url = 'https://maven.fdnetworks.org/releases'
+            credentials {
+                username = System.getenv("fdnetworkUser")
+                password = System.getenv("fdnetworkPassword")
+            }
         }
     }
+}
+
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+    config "${mod_id}.mixins.json"
 }
 
 tasks.withType(JavaCompile).configureEach {

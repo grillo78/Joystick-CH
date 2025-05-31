@@ -10,5 +10,8 @@
   "gui.yaw_not_inverted": "Yaw is not inverted",
   "gui.pitch_not_inverted": "Pitch is not inverted",
   "gui.roll_not_inverted": "Roll is not inverted",
-  "gui.thrust_not_inverted": "Thrust is not inverted"
+  "gui.thrust_not_inverted": "Thrust is not inverted",
+  "key.better_ships.shoot": "Shoot",
+  "key.better_ships.toggle_hyperspeed": "Toggle Hyperspeed",
+  "key.better_ships.autoland": "Toggle Autoland"
 }
