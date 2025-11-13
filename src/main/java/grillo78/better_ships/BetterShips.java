@@ -263,14 +263,14 @@ public class BetterShips {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(ModModelLayers.JAW, () -> JawModel.createBodyLayer());
-    }
-
-    @OnlyIn(Dist.CLIENT)
     private void postRenderEntity(RenderLivingEvent.Post event) {
         if (event.getEntity() instanceof Player)
             event.getPoseStack().popPose();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(ModModelLayers.JAW, () -> JawModel.createBodyLayer());
     }
 
     private void attachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
