@@ -157,6 +157,7 @@ dependencies {
     implementation fg.deobf("curse.maven:oculus-581495:6020952")
     implementation fg.deobf("curse.maven:embeddium-908741:5308079")
     implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:0.0.7.3")
+    implementation fg.deobf("curse.maven:sentinellib-1074465:5626880")
 //    implementation fg.deobf("maven.modrinth:starlance:1.1.9")
 //    implementation fg.deobf("maven.modrinth:cloth-config:11.1.136+forge")
 //    implementation fg.deobf("maven.modrinth:kotlin-for-forge:4.11.0")

@@ -28,8 +28,11 @@ public class JoystickController {
     }
 
     public void setThrust(double thrust) {
-        if (thrust == 0)
+        if (thrust == 0) {
             this.inertiaThrust *= 0.9;
+            if(Math.abs(this.inertiaThrust)<0.001)
+                this.inertiaThrust = 0;
+        }
         else
             this.inertiaThrust = thrust;
         this.thrust = thrust;

@@ -6,8 +6,10 @@ import grillo78.better_ships.capability.ShipRotationsProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -20,6 +22,12 @@ public class Jaw extends Spaceship {
 
     public Jaw(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    @Override
+    protected AABB getBoundingBoxForPose(Pose pPose) {
+
+        return super.getBoundingBoxForPose(pPose);
     }
 
     @Override

@@ -23,6 +23,7 @@ public class InputController {
     @OnlyIn(Dist.CLIENT)
     public void tick(){
         if (JoystickConfig.CLIENT.thrustAxisSelectedIndex.get() >= 0)
+//            thrust = Math.abs(GLFW.glfwGetJoystickAxes(JoystickConfig.CLIENT.joystickSelectedIndex.get()).get(JoystickConfig.CLIENT.thrustAxisSelectedIndex.get())) >=JoystickConfig.CLIENT.thrustDeathzone.get()? -GLFW.glfwGetJoystickAxes(JoystickConfig.CLIENT.joystickSelectedIndex.get()).get(JoystickConfig.CLIENT.thrustAxisSelectedIndex.get()) * (JoystickConfig.CLIENT.thrustAxisInverted.get() ? -1 : 1) : 0;
             thrust = -GLFW.glfwGetJoystickAxes(JoystickConfig.CLIENT.joystickSelectedIndex.get()).get(JoystickConfig.CLIENT.thrustAxisSelectedIndex.get()) * (JoystickConfig.CLIENT.thrustAxisInverted.get() ? -1 : 1);
         if (JoystickConfig.CLIENT.rollAxisSelectedIndex.get() >= 0)
             roll = -GLFW.glfwGetJoystickAxes(JoystickConfig.CLIENT.joystickSelectedIndex.get()).get(JoystickConfig.CLIENT.rollAxisSelectedIndex.get()) * (JoystickConfig.CLIENT.rollAxisInverted.get() ? -1 : 1);

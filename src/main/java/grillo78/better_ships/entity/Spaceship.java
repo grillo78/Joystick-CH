@@ -43,6 +43,7 @@ public class Spaceship extends Mob {
     private float speed = 0.5F;
     private float hyperSpeed = 10F;
     private double partialTick = 0;
+    private boolean canUpdateDeltaMovement = true;
 
     public Spaceship(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -75,7 +76,6 @@ public class Spaceship extends Mob {
     protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
         if (this.hasPassenger(pPassenger)) {
             this.getCapability(ShipRotationsProvider.CAPABILITY).ifPresent(shipRotations -> {
-
                 float d0 = (float) (this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset());
                 Vector3f position = position().toVector3f().add(0, d0, 0);
                 pCallback.accept(pPassenger, position.x, position.y, position.z);
@@ -101,6 +101,12 @@ public class Spaceship extends Mob {
     }
 
     @Override
+    public void setDeltaMovement(Vec3 pDeltaMovement) {
+        if(canUpdateDeltaMovement)
+            super.setDeltaMovement(pDeltaMovement);
+    }
+
+    @Override
     public void tick() {
         this.getCapability(ShipRotationsProvider.CAPABILITY).ifPresent(shipRotations -> {
             if (getPassengers().size() > 0 && getControllingPassenger() instanceof Player)
@@ -110,12 +116,11 @@ public class Spaceship extends Mob {
                         inSpace = false;
                     MovementUtil.applyRotations(getControllingPassenger(), joystickController);
                     MovementUtil.applyThrust(this.getControllingPassenger(), joystickController, shipRotations, inSpace);
-                    if (getBoundingBox() instanceof OBB)
-                        ((OBB) getBoundingBox()).updateAxes(shipRotations.getRotations());
                 });
         });
-
+        canUpdateDeltaMovement = getControllingPassenger() == null;
         super.tick();
+        canUpdateDeltaMovement = true;
         if (!level().isClientSide && CosmosModVariables.WorldVariables.get(level()).atmospheric_collision_data_map.contains(level().dimension().location().toString()) &&
                 CosmosModVariables.WorldVariables.get(level()).atmospheric_collision_data_map.getCompound(level().dimension().location().toString()).getDouble("atmosphere_y") <= getY()) {
             CompoundTag atmosphericData = CosmosModVariables.WorldVariables.get(level()).atmospheric_collision_data_map.getCompound(level().dimension().location().toString());

@@ -1,6 +1,7 @@
 package grillo78.better_ships.client.screen;
 
 import grillo78.better_ships.client.screen.widgets.AxisPanel;
+import grillo78.better_ships.client.screen.widgets.DeathzonesPanel;
 import grillo78.better_ships.client.screen.widgets.KeybindsPanel;
 import grillo78.better_ships.client.screen.widgets.WidgetPanel;
 import grillo78.better_ships.util.JoystickConfig;
@@ -63,6 +64,7 @@ public class JoystickConfigurationScreen extends Screen {
             addRenderableWidget(currentPanel);
 
             panels.add(new KeybindsPanel(centerX-width/2, centerY-height/2, width, height, Component.empty()));
+            panels.add(new DeathzonesPanel(centerX-width/2, centerY-height/2, width, height, Component.empty()));
         }
     }
 

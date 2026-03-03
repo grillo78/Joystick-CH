@@ -14,6 +14,7 @@ public class JoystickConfig {
         public final ForgeConfigSpec.IntValue shootButtonSelectedIndex;
         public final ForgeConfigSpec.IntValue hyperspeedButtonSelectedIndex;
         public final ForgeConfigSpec.IntValue autolandButtonSelectedIndex;
+        public final ForgeConfigSpec.DoubleValue thrustDeathzone;
         public final ForgeConfigSpec.BooleanValue yawAxisInverted;
         public final ForgeConfigSpec.BooleanValue pitchAxisInverted;
         public final ForgeConfigSpec.BooleanValue rollAxisInverted;
@@ -23,13 +24,14 @@ public class JoystickConfig {
         Client(ForgeConfigSpec.Builder builder) {
             builder.push("client");
 
-            this.joystickSelectedIndex = builder.comment("The index of the joystick in the game devices list").defineInRange("joystickSelectedIndex", -1, -1, GLFW.GLFW_JOYSTICK_LAST);
+            this.joystickSelectedIndex = builder.comment("The index of the joystick in the game devices list").defineInRange("joystickSelectedIndex", 0, 0, GLFW.GLFW_JOYSTICK_LAST);
             this.yawAxisSelectedIndex = builder.comment("The index of the yaw axis on the joystick").defineInRange("yawAxisSelectedIndex", -1, -1, Integer.MAX_VALUE);
             this.pitchAxisSelectedIndex = builder.comment("The index of the pitch axis on the joystick").defineInRange("pitchAxisSelectedIndex", -1, -1, Integer.MAX_VALUE);
             this.rollAxisSelectedIndex = builder.comment("The index of the roll axis on the joystick").defineInRange("rollAxisSelectedIndex", -1, -1, Integer.MAX_VALUE);
             this.thrustAxisSelectedIndex = builder.comment("The index of the thrust axis on the joystick").defineInRange("thrustAxisSelectedIndex", -1, -1, Integer.MAX_VALUE);
             this.shootButtonSelectedIndex = builder.comment("The index of the shoot button on the joystick").defineInRange("shootButtonSelectedIndex", -1, -1, Integer.MAX_VALUE);
             this.autolandButtonSelectedIndex = builder.comment("The index of the autoland button on the joystick").defineInRange("autolandButtonSelectedIndex", -1, -1, Integer.MAX_VALUE);
+            this.thrustDeathzone = builder.comment("The deathzone for the thrust axis").defineInRange("thrustDeathzone", 0, 0, 0.5);
             this.hyperspeedButtonSelectedIndex = builder.comment("The index of the hyperspeed button on the joystick").defineInRange("hyperspeedButtonSelectedIndex", -1, -1, Integer.MAX_VALUE);
             this.yawAxisInverted = builder.comment("If the yaw axis is inverted").define("yawAxisInverted", false);
             this.pitchAxisInverted = builder.comment("If the pitch axis is inverted").define("pitchAxisInverted",false);

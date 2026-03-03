@@ -3,6 +3,7 @@
   "gui.pitch": "Set Pitch",
   "gui.roll": "Set Roll",
   "gui.thrust": "Set Thrust",
+  "gui.thrust_deathzone": "Thrust deathzone: ",
   "gui.yaw_inverted": "Yaw is inverted",
   "gui.pitch_inverted": "Pitch is inverted",
   "gui.roll_inverted": "Roll is inverted",
