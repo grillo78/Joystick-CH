@@ -1,21 +1,21 @@
 package grillo78.better_ships.entity;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import grillo78.better_ships.capability.ShipRotations;
 import grillo78.better_ships.capability.ShipRotationsProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Jaw extends Spaceship {
@@ -25,9 +25,8 @@ public class Jaw extends Spaceship {
     }
 
     @Override
-    protected AABB getBoundingBoxForPose(Pose pPose) {
-
-        return super.getBoundingBoxForPose(pPose);
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
     }
 
     @Override
@@ -75,7 +74,7 @@ public class Jaw extends Spaceship {
 
     @Override
     public Vec3 getModelOffset() {
-        return new Vec3(0, -1.5, -0.4);
+        return new Vec3(0, -3/16F, -0.4);
     }
 
     @Override
@@ -86,7 +85,8 @@ public class Jaw extends Spaceship {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void rotatePlayer(PoseStack poseStack, ShipRotations shipRotations) {
-        poseStack.mulPose(new Quaternionf(shipRotations.getRotations()));
+//        poseStack.mulPose(new Quaternionf(shipRotations.getRotations()));
+        super.rotatePlayer(poseStack, shipRotations);
     }
 
     @Override

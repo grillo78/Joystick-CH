@@ -4,9 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import grillo78.better_ships.capability.JoystickControllerProvider;
 import grillo78.better_ships.capability.ShipRotations;
 import grillo78.better_ships.capability.ShipRotationsProvider;
-import grillo78.better_ships.phys.OBB;
+import grillo78.better_ships.phys.OrientedBoundingBox;
 import grillo78.better_ships.util.MovementUtil;
 import net.lointain.cosmos.network.CosmosModVariables;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -18,13 +19,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -59,7 +59,7 @@ public class Spaceship extends Mob {
     }
 
     public float getSpeed(boolean hyperSpeed) {
-        return hyperSpeed? this.getHyperSpeed() : getSpeed();
+        return hyperSpeed ? this.getHyperSpeed() : getSpeed();
     }
 
     public float getHyperSpeed() {
@@ -68,8 +68,30 @@ public class Spaceship extends Mob {
 
     @Override
     protected AABB makeBoundingBox() {
-        return super.makeBoundingBox();
-//        return new OBB(super.makeBoundingBox());
+        ShipRotations shipRotations = this.getCapability(ShipRotationsProvider.CAPABILITY).orElse(null);
+        if (shipRotations == null)
+            return OrientedBoundingBox.fromAABB(super.makeBoundingBox());
+        dimensions = new EntityDimensions(dimensions.width, 2.625F, true);
+        return OrientedBoundingBox.create(position().add(0, dimensions.height/2,0), 1.5, dimensions.height/2,dimensions.width/2, 0,0).rotateByQuaternion(shipRotations.getRotations().x, shipRotations.getRotations().y, shipRotations.getRotations().z, shipRotations.getRotations().w);
+    }
+
+    @Override
+    public void push(double pX, double pY, double pZ) {
+
+    }
+
+    @Override
+    public void push(Entity pEntity) {
+    }
+
+    @Override
+    protected void pushEntities() {
+        super.pushEntities();
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
+        return true;
     }
 
     @Override
@@ -89,26 +111,30 @@ public class Spaceship extends Mob {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 0.5;
+        return getControllingPassenger().getEyeHeight();
     }
 
     public double getCameraOffset() {
-        return getPassengersRidingOffset();
+        return -getPassengersRidingOffset();
     }
 
-    public Vec3 getModelOffset(){
+    public Vec3 getModelOffset() {
         return Vec3.ZERO;
     }
 
     @Override
     public void setDeltaMovement(Vec3 pDeltaMovement) {
-        if(canUpdateDeltaMovement)
+        if (canUpdateDeltaMovement)
             super.setDeltaMovement(pDeltaMovement);
     }
 
     @Override
     public void tick() {
         this.getCapability(ShipRotationsProvider.CAPABILITY).ifPresent(shipRotations -> {
+
+            if (getBoundingBox() instanceof OrientedBoundingBox) {
+                setBoundingBox(makeBoundingBox());
+            }
             if (getPassengers().size() > 0 && getControllingPassenger() instanceof Player)
                 getControllingPassenger().getCapability(JoystickControllerProvider.CONTROLLER).ifPresent(joystickController -> {
                     boolean inSpace = true;
@@ -188,8 +214,8 @@ public class Spaceship extends Mob {
 
     @OnlyIn(Dist.CLIENT)
     public void rotatePlayer(PoseStack poseStack, ShipRotations shipRotations) {
-        poseStack.translate(0, 2 * getPassengersRidingOffset(), 0);
+        poseStack.translate(0, Minecraft.getInstance().player.dimensions.height/2, 0);
         poseStack.mulPose(new Quaternionf(shipRotations.getRotations()));
-        poseStack.translate(0, 2 * -getPassengersRidingOffset(), 0);
+        poseStack.translate(0, -Minecraft.getInstance().player.getEyeHeight(), 0);
     }
 }

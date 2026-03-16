@@ -28,7 +28,10 @@ public class MovementUtil {
                 float newX = (float) -joystickController.getPitch() * 0.1F;
                 float newY = (float) joystickController.getYaw() * 0.1F;
                 float newZ = (float) joystickController.getRoll() * 0.1F;
-                if (!vehicle.onGround()) {
+                if (vehicle.onGround() && joystickController.getPitch()<0) {
+                    newX = 0;
+                }
+                if (!vehicle.onGround()){
                     Quaternionf deltaQuaternion = new Quaternionf().rotateXYZ(newX, newY, newZ);
                     shipRotations.setRotations(shipRotations.getRotations().mul(deltaQuaternion, new Quaternionf()));
                 } else {

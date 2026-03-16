@@ -17,6 +17,7 @@ import grillo78.better_ships.network.PacketHandler;
 import grillo78.better_ships.network.messages.SendJoystickInput;
 import grillo78.better_ships.network.messages.ToggleAutoland;
 import grillo78.better_ships.network.messages.ToggleSpaceHyperspeed;
+import grillo78.better_ships.phys.OrientedBoundingBox;
 import grillo78.better_ships.util.JoystickConfig;
 import net.lointain.cosmos.CosmosMod;
 import net.lointain.cosmos.entity.RocketSeatEntity;
@@ -31,6 +32,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
@@ -220,6 +222,12 @@ public class BetterShips {
 
     @OnlyIn(Dist.CLIENT)
     private void preRenderEntity(RenderLivingEvent.Pre event) {
+        if (event.getEntity().getBoundingBox() instanceof OrientedBoundingBox) {
+            Vec3[] corners = ((OrientedBoundingBox) event.getEntity().getBoundingBox()).getCorners();
+            VertexConsumer vertexConsumer = event.getMultiBufferSource().getBuffer(RenderType.LINES);
+            vertexConsumer.vertex(event.getPoseStack().last().pose(), (float) corners[0].x,  (float) corners[0].y,  (float) corners[0].z).color(1F,0F,0F,1F).normal(event.getPoseStack().last().normal(), 0,1,0).endVertex();
+            vertexConsumer.vertex(event.getPoseStack().last().pose(), (float) corners[1].x,  (float) corners[1].y,  (float) corners[1].z).color(1F,0F,0F,1F).normal(event.getPoseStack().last().normal(), 0,1,0).endVertex();
+        }
         if (event.getEntity() instanceof RocketSeatEntity) {
             event.getPoseStack().pushPose();
             event.getEntity().getCapability(ShipRotationsProvider.CAPABILITY).ifPresent(shipRotations -> {

@@ -8,7 +8,10 @@
     "PitchsideProcedureMixin",
     "ProvideThrustProcedureMixin",
     "ShipMovementProcedureMixin",
-    "MinecraftServerMixin"
+    "MinecraftServerMixin",
+    "EntityMixin",
+    "AABBMixin",
+    "VoxelShapeMixin"
   ],
   "client": [
     "client.GameRendererMixin",
